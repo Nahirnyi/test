@@ -16,9 +16,9 @@ class CreateRoutesTable extends Migration
         Schema::create('routes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('ship_id');
-            $table->string('total_time');
-            $table->string('total_distance');
-            $table->string('average_speed');
+            $table->decimal('total_time', 20,2);
+            $table->decimal('total_distance',20,2);
+            $table->decimal('average_speed', 22,2, 4);
             $table->timestamps();
         });
     }
