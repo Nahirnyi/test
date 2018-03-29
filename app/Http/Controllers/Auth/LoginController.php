@@ -2,38 +2,32 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\LoginRequest;
+use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function store(LoginRequest $request)
     {
-        $this->middleware('guest')->except('logout');
+        $credentials = request(['email', 'password']);
+        try {
+            if (!$token = JWTAuth::attempt($credentials))
+            {
+                return response()->json([
+                    'error' => 'Invalid Credentials'
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+        } catch (JWTException $e){
+            return response()->json([
+                'error' => 'Could not create token'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response()->json([
+            'token' => $token
+        ], Response::HTTP_OK);
     }
 }

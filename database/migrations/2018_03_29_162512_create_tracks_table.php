@@ -16,9 +16,9 @@ class CreateTracksTable extends Migration
         Schema::create('tracks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('route_id');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('speed');
+            $table->decimal('latitude', 10,6);
+            $table->decimal('longitude', 10, 6);
+            $table->decimal('speed', 6, 2);
             $table->timestamps();
         });
     }

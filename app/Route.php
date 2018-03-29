@@ -21,6 +21,6 @@ class Route extends Model
      */
    public function tracks() : HasMany
    {
-       $this->hasMany(Track::class);
+       $this->hasMany(Track::class, 'track_id', 'id');
    }
 }

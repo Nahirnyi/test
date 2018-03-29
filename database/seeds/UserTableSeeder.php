@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class CompanyTableSeeder extends Seeder
+class UserTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,6 @@ class CompanyTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = \App\User::first();
-        factory(App\Company::class, 10)->create(['owner_id' => $user->id]);
+        factory(App\User::class, 1)->create();
     }
 }
