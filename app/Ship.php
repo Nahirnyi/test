@@ -26,7 +26,7 @@ class Ship extends Model
      */
     public function containers() : HasMany
     {
-        return $this->hasMany(Container::class,'container_id','id');
+        return $this->hasMany(Container::class);
     }
 
     /**
@@ -34,6 +34,6 @@ class Ship extends Model
      */
     public function routes() : HasMany
     {
-        return $this->hasMany(Route::class, 'route_id', 'id');
+        return $this->hasMany(Route::class);
     }
 }

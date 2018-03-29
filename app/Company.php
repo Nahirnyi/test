@@ -17,7 +17,7 @@ class Company extends Model
      */
     public function ships() : HasMany
     {
-        return $this->hasMany(Ship::class, 'ship_id', 'id');
+        return $this->hasMany(Ship::class);
     }
 
     /**
@@ -25,6 +25,6 @@ class Company extends Model
      */
     public function users() :HasMany
     {
-        return $this->hasMany(User::class, 'user_id', 'id');
+        return $this->hasMany(User::class);
     }
 }

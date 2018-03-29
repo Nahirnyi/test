@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Company;
+
+class CompanyRepository
+{
+    public function add($data) : Company
+    {
+        $company = new Company();
+        $company->name = $data('name');
+        $company->owner_id = $data('owner_id');
+        $company->save();
+
+        return $company;
+    }
+}
