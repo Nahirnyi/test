@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 class ContainersController extends Controller
 {
     /**
+     * @param Ship $ship
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Ship $ship)
