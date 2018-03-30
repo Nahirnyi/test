@@ -2,84 +2,71 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Api\RouteRequest;
+use App\Route;
+use App\Ship;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 class RoutesController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param Ship $ship
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Ship $ship)
     {
-        //
+        $routes = $ship->routes()->get();
+
+        return response()->json([
+            compact('routes')
+        ], Response::HTTP_OK);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param RouteRequest $request
+     * @param Ship $ship
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function store(RouteRequest $request, Ship $ship)
     {
-        //
+        $route = new Route();
+        $route->total_time = request('total_time');
+        $route->ship_id = $ship->id;
+        $route->total_distance = request('total_distance');
+        $route->average_speed = request('average_speed');
+        $route->save();
+
+        return response()->json([
+            'message' => 'Successfully created route!',
+            compact('route')
+        ], Response::HTTP_CREATED);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Ship $ship
+     * @param Route $route
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function show(Ship $ship, Route $route)
     {
-        //
+        return response()->json([
+            compact('route')
+        ], Response::HTTP_OK);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Ship $ship
+     * @param Route $route
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function show($id)
+    public function destroy(Ship $ship, Route $route)
     {
-        //
-    }
+        $route->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->json([
+            'message' => 'Successfully deleted route!'
+        ], Response::HTTP_OK);
     }
 }
