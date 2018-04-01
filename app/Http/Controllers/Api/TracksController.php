@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Route;
+use App\Http\Requests\Api\TrackRequest;
+use App\Track;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 class TracksController extends Controller
 {
-    /**
-     * @param Route $route
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Route $route)
+    public function store(TrackRequest $request)
     {
-        $tracks = $route->tracks()->get();
+        $track = new Track();
+        $track->latitude = request('latitude');
+        $track->longitude = request('longitude');
+        $track->speed = request('speed');
+        $track->route_id = request('route_id');
+        $track->save();
 
         return response()->json([
-            compact('tracks')
-        ], Response::HTTP_OK);
+            config('models.messages.message') => config('models.controllers.track.statuses.created'),
+            compact('track')
+        ], Response::HTTP_CREATED);
     }
 }

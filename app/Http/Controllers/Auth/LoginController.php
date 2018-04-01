@@ -10,6 +10,10 @@ use App\Http\Controllers\Controller;
 
 class LoginController extends Controller
 {
+    /**
+     * @param LoginRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(LoginRequest $request)
     {
         $credentials = request(['email', 'password']);
@@ -17,17 +21,15 @@ class LoginController extends Controller
             if (!$token = JWTAuth::attempt($credentials))
             {
                 return response()->json([
-                    'error' => 'Invalid Credentials'
+                    config('models.messages.error') => config('models.controllers.user.errors.invalidCredentials')
                 ], Response::HTTP_UNAUTHORIZED);
             }
         } catch (JWTException $e){
             return response()->json([
-                'error' => 'Could not create token'
+                config('models.messages.error') => config('models.controllers.user.errors.couldNotCreateToken')
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json([
-            'token' => $token
-        ], Response::HTTP_OK);
+        return response()->json(compact('token'), Response::HTTP_OK);
     }
 }

@@ -1,20 +1,31 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Ship;
 
 use App\Container;
 use App\Http\Requests\Api\ContainerRequest;
+use App\Ship;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use JWTAuth;
 
 class ContainersController extends Controller
 {
     /**
+     * ContainersController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth.jwt')->except(['index', 'show']);
+    }
+
+    /**
+     * @param Ship $ship
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Ship $ship)
     {
-        $containers = Container::all();
+        $containers = $ship->containers()->get();
 
         return response()->json([
             compact('containers')
@@ -22,28 +33,32 @@ class ContainersController extends Controller
     }
 
     /**
+     * @param Ship $ship
      * @param ContainerRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ContainerRequest $request)
+    public function store(Ship $ship, ContainerRequest $request)
     {
+        $user = JWTAuth::parseToken()->toUser();
+
         $container = new Container();
         $container->name = request('name');
-        $container->ship_id = request('ship_id');
+        $container->ship_id = $ship->id;
         $container->price = request('price');
         $container->save();
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.created'),
-            compact('container')
+            compact('container', 'user')
         ], Response::HTTP_CREATED);
     }
 
     /**
+     * @param Ship $ship
      * @param Container $container
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Container $container)
+    public function show(Ship $ship, Container $container)
     {
         return response()->json([
             compact('container')
@@ -52,13 +67,14 @@ class ContainersController extends Controller
 
     /**
      * @param ContainerRequest $request
+     * @param Ship $ship
      * @param Container $container
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(ContainerRequest $request, Container $container)
+    public function update(ContainerRequest $request, Ship $ship, Container $container)
     {
         $container->name = request('name');
-        $container->ship_id = request('ship_id');
+        $container->ship_id = $ship->id;
         $container->price = request('price');
         $container->save();
 
@@ -69,11 +85,12 @@ class ContainersController extends Controller
     }
 
     /**
+     * @param Ship $ship
      * @param Container $container
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroy(Container $container)
+    public function destroy(Ship $ship, Container $container)
     {
         $container->delete();
 

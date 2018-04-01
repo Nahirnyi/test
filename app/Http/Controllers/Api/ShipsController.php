@@ -37,7 +37,7 @@ class ShipsController extends Controller
         $ship->save();
 
         return response()->json([
-            'message' => 'Successfully created ship!',
+            config('models.messages.message') => config('models.controllers.ship.statuses.created'),
             compact('ship')
         ], Response::HTTP_CREATED);
     }
@@ -67,7 +67,7 @@ class ShipsController extends Controller
         $ship->save();
 
         return response()->json([
-            'message' => 'Successfully updated ship!',
+            config('models.messages.message') => config('models.controllers.ship.statuses.updated'),
             compact('ship')
         ], Response::HTTP_OK);
     }
@@ -83,7 +83,7 @@ class ShipsController extends Controller
         $ship->delete();
 
         return response()->json([
-            'message' => 'Successfully deleted ship!'
+            config('models.messages.message') => config('models.controllers.ship.statuses.deleted'),
         ], Response::HTTP_OK);
     }
 }

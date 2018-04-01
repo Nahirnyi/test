@@ -17,7 +17,7 @@ class CreateShipsTable extends Migration
             $table->increments('id');
             $table->integer('company_id');
             $table->string('name');
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(config('models.migrations.ship.standing'));
             $table->timestamps();
         });
     }

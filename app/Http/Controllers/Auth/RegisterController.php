@@ -8,6 +8,10 @@ use App\User;
 
 class RegisterController extends Controller
 {
+    /**
+     * @param RegisterRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(RegisterRequest $request)
     {
         $user = new User([
@@ -19,7 +23,7 @@ class RegisterController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'Successfully created user!'
+            config('models.messages.message') => config('models.controllers.user.statuses.created'),
         ], 201);
     }
 }

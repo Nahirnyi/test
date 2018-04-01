@@ -33,7 +33,7 @@ class CompaniesController extends Controller
         $company->save();
 
         return response()->json([
-            'message' => 'Successfully created company!',
+            config('models.messages.message') => config('models.controllers.company.statuses.created'),
             compact('company')
         ], Response::HTTP_CREATED);
     }
@@ -61,7 +61,7 @@ class CompaniesController extends Controller
         $company->save();
 
         return response()->json([
-            'message' => 'Successfully updated company!',
+            config('models.messages.message') => config('models.controllers.company.statuses.updated'),
             compact('company')
         ], Response::HTTP_OK);
     }
@@ -76,7 +76,7 @@ class CompaniesController extends Controller
         $company->delete();
 
         return response()->json([
-            'message' => 'Successfully deleted company!'
+            config('models.messages.message') => config('models.controllers.company.statuses.deleted')
         ], Response::HTTP_OK);
     }
 }

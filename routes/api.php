@@ -20,8 +20,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/register', 'Auth\RegisterController@store');
 Route::post('/login', 'Auth\LoginController@store');
 
-Route::resource('/companies', 'Api\CompaniesController', ['except' => ['create', 'edit']]);
+Route::resource('/companies', 'Api\Ship\CompaniesController', ['except' => ['create', 'edit']]);
 Route::resource('/companies/{company}/ships', 'Api\ShipsController', ['except' => ['create', 'edit']]);
-Route::resource('/ships/{ship}/containers', 'Api\ContainersController', ['except' => ['create', 'edit']]);
-Route::resource('/ships/{ship}/routes', 'Api\RoutesController', ['except' => ['create', 'edit', 'update']]);
-Route::resource('/routes/{route}/tracks', 'Api\TracksController', ['only' => 'index']);
+Route::resource('/ships/{ship}/containers', 'Api\Ship\ContainersController', ['except' => ['create', 'edit']]);
+Route::resource('/ships/{ship}/routes', 'Api\Ship\RoutesController', ['except' => ['create', 'edit', 'update']]);
+Route::resource('/routes/{route}/tracks', 'Api\Ship\TracksController', ['only' => 'index']);
+
+Route::resource('/containers', 'Api\ContainersController', ['except' => ['create', 'edit']]);
+Route::resource('/routes', 'Api\RoutesController', ['except' => ['create', 'edit', 'update']]);
+Route::resource('/tracks', 'Api\TracksController', ['only' => 'store']);
+
+Route::resource('/statistics', 'Api\Statistic\StatisticsController', ['only' => 'index']);

@@ -18,7 +18,7 @@ class CreateContainersTable extends Migration
             $table->integer('ship_id');
             $table->string('name');
             $table->decimal('price', 15, 2);
-            $table->integer('status')->default(config('models.container.statuses.loading'));
+            $table->integer('status')->default(config('models.migrations.container.loading'));
             $table->timestamps();
         });
     }
