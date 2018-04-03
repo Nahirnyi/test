@@ -43,7 +43,7 @@ class ContainersController extends Controller
 
         $container = new Container();
         $container->name = request('name');
-        $container->ship_id = $ship->id;
+        $container->ship()->associate($ship);
         $container->price = request('price');
         $container->save();
 

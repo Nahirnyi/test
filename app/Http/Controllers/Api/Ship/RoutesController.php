@@ -32,7 +32,7 @@ class RoutesController extends Controller
     {
         $route = new Route();
         $route->total_time = request('total_time');
-        $route->ship_id = $ship->id;
+        $route->ship()->associate($ship);
         $route->total_distance = request('total_distance');
         $route->average_speed = request('average_speed');
         $route->save();

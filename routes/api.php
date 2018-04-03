@@ -30,4 +30,4 @@ Route::resource('/containers', 'Api\ContainersController', ['except' => ['create
 Route::resource('/routes', 'Api\RoutesController', ['except' => ['create', 'edit', 'update']]);
 Route::resource('/tracks', 'Api\TracksController', ['only' => 'store']);
 
-Route::resource('/statistics', 'Api\Statistic\StatisticsController', ['only' => 'index']);
+Route::get('/statistics/{key}', 'Api\Statistic\StatisticsController@show');

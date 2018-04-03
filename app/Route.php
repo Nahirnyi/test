@@ -13,7 +13,7 @@ class Route extends Model
      */
    public function ship() : BelongsTo
    {
-       $this->belongsTo(Ship::class, 'ship_id', 'id');
+       return $this->belongsTo(Ship::class, 'ship_id', 'id');
    }
 
     /**

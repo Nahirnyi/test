@@ -3,33 +3,36 @@
 namespace App\Http\Controllers\Api\Statistic;
 
 use App\Route;
+use function Couchbase\defaultDecoder;
+use http\Env\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use JWTAuth;
 
 class StatisticsController extends Controller
 {
-    public function index()
+    public function show(string $key)
     {
-        if (request('stat'))
-        {
-            if (request('stat') == 'latest')
-            {
-                $routes = Route::latest()->take(5)->get();
-            }
+        $query = Route::query();
 
-            if (request('stat') == 'longest')
-            {
-                $routes = Route::orderBy('total_distance', 'desc')->take(5)->get();
-            }
-
-            if (request('stat') == 'max_average_speed')
-            {
-                $routes = Route::orderBy('average_speed', 'desc')->take(5)->get();
-            }
+        switch ($key) {
+            case 'latest' :
+                $query->latest();
+                break;
+            case 'longest' :
+                $query->oldest('total_distance');
+                break;
+            case 'max_average_speed' :
+                $query->latest('average_speed');
+            default :
+                $query->latest();
+                break;
         }
 
+        $routes = $query->take(5)->get();
+
         return response()->json([
-            compact('routes')
+            'routes' => $routes
         ], Response::HTTP_OK);
     }
 }
