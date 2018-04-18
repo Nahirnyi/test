@@ -5,16 +5,31 @@ namespace App\Http\Controllers\Api;
 use App\Company;
 use App\Http\Requests\Api\CompanyRequest;
 use App\Http\Controllers\Controller;
+use App\Repositories\CompanyRepository;
 use Illuminate\Http\Response;
 
 class CompaniesController extends Controller
 {
     /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
+     * CompaniesController constructor.
+     * @param CompanyRepository $companyRepository
+     */
+    public function __construct(CompanyRepository $companyRepository)
+    {
+        $this->companyRepository = $companyRepository;
+    }
+
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $companies = Company::all();
+        $companies = $this->companyRepository->all();
 
         return response()->json([
             compact('companies')
@@ -27,10 +42,7 @@ class CompaniesController extends Controller
      */
     public function store(CompanyRequest $request)
     {
-        $company = new Company();
-        $company->name = request('name');
-        $company->owner_id = request('owner_id');
-        $company->save();
+        $company = $this->companyRepository->add(request(['name', 'owner_id']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.company.statuses.created'),
@@ -56,9 +68,7 @@ class CompaniesController extends Controller
      */
     public function update(CompanyRequest $request, Company $company)
     {
-        $company->name = request('name');
-        $company->owner_id = request('owner_id');
-        $company->save();
+        $this->companyRepository->update($company, request(['name', 'owner_id']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.company.statuses.updated'),
@@ -73,7 +83,7 @@ class CompaniesController extends Controller
      */
     public function destroy(Company $company)
     {
-        $company->delete();
+        $this->companyRepository->delete($company);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.company.statuses.deleted')
