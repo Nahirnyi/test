@@ -7,6 +7,7 @@
  */
 
 namespace App\Repositories;
+
 use App\Company;
 
 class CompanyRepository

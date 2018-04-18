@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Company;
 use App\Http\Requests\Api\ShipRequest;
+use App\Repositories\ShipRepository;
 use App\Ship;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,12 +13,26 @@ use Illuminate\Http\Response;
 class ShipsController extends Controller
 {
     /**
+     * @var ShipRepository
+     */
+    private $shipRepository;
+
+    /**
+     * ShipsController constructor.
+     * @param ShipRepository $repository
+     */
+    public function __construct(ShipRepository $repository)
+    {
+        $this->shipRepository = $repository;
+    }
+
+    /**
      * @param Company $company
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Company $company)
     {
-        $ships = $company->ships()->get();
+        $ships = $this->shipRepository->all($company);
 
         return response()->json([
             compact('ships')
@@ -31,10 +46,7 @@ class ShipsController extends Controller
      */
     public function store(Company $company, ShipRequest $request)
     {
-        $ship = new Ship();
-        $ship->name = request('name');
-        $ship->company_id = $company->id;
-        $ship->save();
+        $ship = $this->shipRepository->add(request(['name']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.ship.statuses.created'),
@@ -62,9 +74,7 @@ class ShipsController extends Controller
      */
     public function update(ShipRequest $request, Company $company, Ship $ship)
     {
-        $ship->name = request('name');
-        $ship->company_id = $company->id;
-        $ship->save();
+        $this->shipRepository->update($company, $ship, request(['name']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.ship.statuses.updated'),
@@ -80,7 +90,7 @@ class ShipsController extends Controller
      */
     public function destroy(Company $company, Ship $ship)
     {
-        $ship->delete();
+        $this->shipRepository->delete($ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.ship.statuses.deleted'),
