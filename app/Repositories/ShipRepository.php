@@ -21,7 +21,7 @@ class ShipRepository
     public function add($company, $data): Ship
     {
         $ship = new Ship();
-        $ship->name = $data('name');
+        $ship->name = $data['name'];
         $ship->company_id = $company->id;
         $ship->save();
 
@@ -47,7 +47,7 @@ class ShipRepository
      */
     public function update($company, $ship, $data): Ship
     {
-        $ship->name = $data('name');
+        $ship->name = $data['name'];
         $ship->company_id = $company->id;
         $ship->save();
 

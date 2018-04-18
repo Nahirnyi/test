@@ -19,8 +19,8 @@ class CompanyRepository
     public function add($data) : Company
     {
         $company = new Company();
-        $company->name = $data('name');
-        $company->owner_id = $data('owner_id');
+        $company->name = $data['name'];
+        $company->owner_id = $data['owner_id'];
         $company->save();
 
         return $company;
@@ -43,8 +43,8 @@ class CompanyRepository
      */
     public function update($company, $data):Company
     {
-        $company->name = $data('name');
-        $company->owner_id = $data('owner_id');
+        $company->name = $data['name'];
+        $company->owner_id = $data['owner_id'];
         $company->save();
 
         return $company;

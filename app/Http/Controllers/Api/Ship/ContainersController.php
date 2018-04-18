@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Ship;
 
 use App\Container;
 use App\Http\Requests\Api\ContainerRequest;
+use App\Repositories\ContainerRepository;
 use App\Ship;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -12,11 +13,18 @@ use JWTAuth;
 class ContainersController extends Controller
 {
     /**
-     * ContainersController constructor.
+     * @var ContainerRepository
      */
-    public function __construct()
+    private $containerRepository;
+
+    /**
+     * ContainersController constructor.
+     * @param ContainerRepository $repository
+     */
+    public function __construct(ContainerRepository $repository)
     {
         $this->middleware('auth.jwt')->except(['index', 'show']);
+        $this->containerRepository = $repository;
     }
 
     /**
@@ -25,7 +33,7 @@ class ContainersController extends Controller
      */
     public function index(Ship $ship)
     {
-        $containers = $ship->containers()->get();
+        $containers = $this->containerRepository->all($ship);
 
         return response()->json([
             compact('containers')
@@ -41,11 +49,7 @@ class ContainersController extends Controller
     {
         $user = JWTAuth::parseToken()->toUser();
 
-        $container = new Container();
-        $container->name = request('name');
-        $container->ship()->associate($ship);
-        $container->price = request('price');
-        $container->save();
+        $container = $this->containerRepository->add($ship, request(['name', 'price']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.created'),
@@ -73,10 +77,7 @@ class ContainersController extends Controller
      */
     public function update(ContainerRequest $request, Ship $ship, Container $container)
     {
-        $container->name = request('name');
-        $container->ship_id = $ship->id;
-        $container->price = request('price');
-        $container->save();
+        $container = $this->containerRepository->update($container, request('name', 'price'), $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.updated'),
@@ -92,7 +93,7 @@ class ContainersController extends Controller
      */
     public function destroy(Ship $ship, Container $container)
     {
-        $container->delete();
+        $this->containerRepository->delete($container);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.deleted')

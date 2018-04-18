@@ -4,17 +4,32 @@ namespace App\Http\Controllers\Api;
 
 use App\Container;
 use App\Http\Requests\Api\ContainerRequest;
+use App\Repositories\ContainerRepository;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 class ContainersController extends Controller
 {
     /**
+     * @var ContainerRepository
+     */
+    private $containerRepository;
+
+    /**
+     * ContainersController constructor.
+     * @param ContainerRepository $repository
+     */
+    public function __construct(ContainerRepository $repository)
+    {
+        $this->containerRepository = $repository;
+    }
+
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $containers = Container::all();
+        $containers = $this->containerRepository->all();
 
         return response()->json([
             compact('containers')
@@ -27,11 +42,8 @@ class ContainersController extends Controller
      */
     public function store(ContainerRequest $request)
     {
-        $container = new Container();
-        $container->name = request('name');
-        $container->ship_id = request('ship_id');
-        $container->price = request('price');
-        $container->save();
+
+        $container = $this->containerRepository->add(request(['name', 'ship_id', 'price']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.created'),
@@ -57,10 +69,7 @@ class ContainersController extends Controller
      */
     public function update(ContainerRequest $request, Container $container)
     {
-        $container->name = request('name');
-        $container->ship_id = request('ship_id');
-        $container->price = request('price');
-        $container->save();
+        $this->containerRepository->update($container, request(['name', 'ship_id', 'price']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.updated'),
@@ -75,7 +84,7 @@ class ContainersController extends Controller
      */
     public function destroy(Container $container)
     {
-        $container->delete();
+        $this->containerRepository->delete($container);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.deleted')
