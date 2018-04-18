@@ -16,6 +16,7 @@ class CreateContainersTable extends Migration
         Schema::create('containers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('ship_id');
+            $table->foreign('ship_id')->references('id')->on('ships')->onDelete('cascade');
             $table->string('name');
             $table->decimal('price', 15, 2);
             $table->integer('status')->default(config('models.migrations.container.loading'));

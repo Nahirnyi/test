@@ -16,6 +16,7 @@ class CreateTracksTable extends Migration
         Schema::create('tracks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('route_id');
+            $table->foreign('route_id')->references('id')->on('routes')->onDelete('cascade');
             $table->decimal('latitude', 10,6);
             $table->decimal('longitude', 10, 6);
             $table->decimal('speed', 6, 2);
