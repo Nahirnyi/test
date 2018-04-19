@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Ship;
 
 use App\Http\Requests\Api\RouteRequest;
+use App\Repositories\RouteRepository;
 use App\Route;
 use App\Ship;
 use Illuminate\Http\Response;
@@ -11,12 +12,26 @@ use App\Http\Controllers\Controller;
 class RoutesController extends Controller
 {
     /**
+     * @var RouteRepository
+     */
+    private $routeRepository;
+
+    /**
+     * RoutesController constructor.
+     * @param RouteRepository $repository
+     */
+    public function __construct(RouteRepository $repository)
+    {
+        $this->routeRepository = $repository;
+    }
+
+    /**
      * @param Ship $ship
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Ship $ship)
     {
-        $routes = $ship->routes()->get();
+        $routes = $this->routeRepository->all($ship);
 
         return response()->json([
             compact('routes')
@@ -30,12 +45,7 @@ class RoutesController extends Controller
      */
     public function store(RouteRequest $request, Ship $ship)
     {
-        $route = new Route();
-        $route->total_time = request('total_time');
-        $route->ship()->associate($ship);
-        $route->total_distance = request('total_distance');
-        $route->average_speed = request('average_speed');
-        $route->save();
+        $route = $this->routeRepository->add(request(['total_time', 'total_distance', 'average_speed']), $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.route.statuses.created'),
@@ -63,7 +73,7 @@ class RoutesController extends Controller
      */
     public function destroy(Ship $ship, Route $route)
     {
-        $route->delete();
+        $this->routeRepository->delete($route);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.route.statuses.deleted')

@@ -49,7 +49,7 @@ class ContainersController extends Controller
     {
         $user = JWTAuth::parseToken()->toUser();
 
-        $container = $this->containerRepository->add($ship, request(['name', 'price']));
+        $container = $this->containerRepository->add(request(['name', 'price']), $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.created'),

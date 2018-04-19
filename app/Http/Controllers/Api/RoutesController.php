@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\RouteRequest;
+use App\Repositories\RouteRepository;
 use App\Route;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -10,11 +11,25 @@ use App\Http\Controllers\Controller;
 class RoutesController extends Controller
 {
     /**
+     * @var RouteRepository
+     */
+    private $routeRepository;
+
+    /**
+     * RoutesController constructor.
+     * @param RouteRepository $repository
+     */
+    public function __construct(RouteRepository $repository)
+    {
+        $this->routeRepository = $repository;
+    }
+
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $routes = Route::all();
+        $routes = $this->routeRepository->all();
 
         return response()->json([
             compact('routes')
@@ -27,12 +42,7 @@ class RoutesController extends Controller
      */
     public function store(RouteRequest $request)
     {
-        $route = new Route();
-        $route->total_time = request('total_time');
-        $route->ship_id = request('ship_id');
-        $route->total_distance = request('total_distance');
-        $route->average_speed = request('average_speed');
-        $route->save();
+        $route = $this->routeRepository->add(request(['total_time', 'ship_id', 'total_distance', 'average_speed']));
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.route.statuses.created'),
@@ -58,7 +68,7 @@ class RoutesController extends Controller
      */
     public function destroy(Route $route)
     {
-        $route->delete();
+        $this->routeRepository->delete($route);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.route.statuses.deleted')

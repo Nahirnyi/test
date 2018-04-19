@@ -17,7 +17,7 @@ class ContainerRepository
      * @param $data
      * @return Container
      */
-    public function add($ship, $data):Container
+    public function add($data, $ship):Container
     {
         $container = new Container();
         $container->name = $data('name');
