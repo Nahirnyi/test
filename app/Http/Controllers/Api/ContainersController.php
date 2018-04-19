@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Container;
 use App\Http\Requests\Api\ContainerRequest;
 use App\Repositories\ContainerRepository;
+use App\Ship;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
@@ -42,8 +43,9 @@ class ContainersController extends Controller
      */
     public function store(ContainerRequest $request)
     {
-
-        $container = $this->containerRepository->add(request(['name', 'ship_id', 'price']));
+        $data = $request->only(['name', 'ship_id', 'price']);
+        $ship = Ship::findOrFail(array_get($data, 'ship_id'));
+        $container = $this->containerRepository->add($data, $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.created'),
@@ -69,7 +71,9 @@ class ContainersController extends Controller
      */
     public function update(ContainerRequest $request, Container $container)
     {
-        $this->containerRepository->update($container, request(['name', 'ship_id', 'price']));
+        $data = $request->only(['name', 'ship_id', 'price']);
+        $ship = Ship::findOrFail(array_get($data, 'ship_id'));
+        $container = $this->containerRepository->update($container, $data, $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.updated'),

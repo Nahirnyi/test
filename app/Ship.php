@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ship extends Model
 {
-
-    /*************
-     * RELATIONS *
-     ************/
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'name'
+    ];
 
     /**
      * @return BelongsTo

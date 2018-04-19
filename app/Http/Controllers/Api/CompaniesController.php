@@ -6,6 +6,7 @@ use App\Company;
 use App\Http\Requests\Api\CompanyRequest;
 use App\Http\Controllers\Controller;
 use App\Repositories\CompanyRepository;
+use App\User;
 use Illuminate\Http\Response;
 
 class CompaniesController extends Controller
@@ -42,7 +43,9 @@ class CompaniesController extends Controller
      */
     public function store(CompanyRequest $request)
     {
-        $company = $this->companyRepository->add(request(['name', 'owner_id']));
+        $data = $request->only(['name', 'owner_id']);
+        User::findOrFail(array_get($data, 'owner_id'));
+        $company = $this->companyRepository->add($data);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.company.statuses.created'),
@@ -68,7 +71,9 @@ class CompaniesController extends Controller
      */
     public function update(CompanyRequest $request, Company $company)
     {
-        $this->companyRepository->update($company, request(['name', 'owner_id']));
+        $data = $request->only(['name', 'owner_id']);
+        User::findOrFail(array_get($data, 'owner_id'));
+        $company = $this->companyRepository->update($company, $data);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.company.statuses.updated'),

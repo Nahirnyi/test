@@ -9,17 +9,17 @@
 namespace App\Repositories;
 
 use App\Company;
+use Illuminate\Support\Collection;
 
 class CompanyRepository
 {
     /**
-     * @param $data
+     * @param array $data
      * @return Company
      */
-    public function add($data) : Company
+    public function add(array $data) : Company
     {
-        $company = new Company();
-        $company->name = $data['name'];
+        $company = new Company($data);
         $company->owner_id = $data['owner_id'];
         $company->save();
 
@@ -27,9 +27,9 @@ class CompanyRepository
     }
 
     /**
-     * @return Company
+     * @return Collection
      */
-    public function all() : Company
+    public function all() : Collection
     {
         $companies = Company::all();
 
@@ -37,13 +37,13 @@ class CompanyRepository
     }
 
     /**
-     * @param $company
-     * @param $data
+     * @param Company $company
+     * @param array $data
      * @return Company
      */
-    public function update($company, $data):Company
+    public function update(Company $company, array $data) : Company
     {
-        $company->name = $data['name'];
+        $company->fill($data);
         $company->owner_id = $data['owner_id'];
         $company->save();
 

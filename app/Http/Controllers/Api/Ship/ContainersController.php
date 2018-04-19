@@ -49,7 +49,8 @@ class ContainersController extends Controller
     {
         $user = JWTAuth::parseToken()->toUser();
 
-        $container = $this->containerRepository->add(request(['name', 'price']), $ship);
+        $data = $request->only(['name', 'ship_id', 'price']);
+        $container = $this->containerRepository->add($data, $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.created'),
@@ -77,7 +78,8 @@ class ContainersController extends Controller
      */
     public function update(ContainerRequest $request, Ship $ship, Container $container)
     {
-        $container = $this->containerRepository->update($container, request('name', 'price'), $ship);
+        $data = $request->only(['name', 'ship_id', 'price']);
+        $container = $this->containerRepository->update($container, $data, $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.container.statuses.updated'),

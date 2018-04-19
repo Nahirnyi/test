@@ -10,39 +10,31 @@ namespace App\Repositories;
 
 use App\Route;
 use App\Ship;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use phpDocumentor\Reflection\Types\String_;
 
 class RouteRepository
 {
     /**
-     * @param $data
-     * @param $ship
+     * @param array $data
+     * @param Ship $ship
      * @return Route
      */
-    public function add($data, $ship) : Route
+    public function add(array $data, Ship $ship) : Route
     {
-        $route = new Route();
-        $route->total_time = $data['total_time'];
-        if ($data['ship_id'])
-        {
-            $route->ship_id = $data['ship_id'];
-        } elseif($ship)
-        {
-            $route->ship()->associate($ship);
-        }
-
-        $route->total_distance = $data['total_distance'];
-        $route->average_speed = $data['average_speed'];
+        $route = new Route($data);
+        $route->ship()->associate($ship);
         $route->save();
 
         return $route;
     }
 
     /**
-     * @param $ship
-     * @return Route
+     * @param Ship $ship
+     * @return Collection
      */
-    public function all($ship): Route
+    public function all(Ship $ship) : Collection
     {
         if ($ship)
         {
@@ -64,19 +56,19 @@ class RouteRepository
     }
 
     /**
-     * @param $route
-     * @return string
+     * @param Route $route
+     * @return String_
      */
-    public function makeGpx($route)
+    public function makeGpx(Route $route) : String_
     {
         $tracks = $route->tracks()->get();
-        $gpxData = "<gpx>";
+        $gpxData = '<gpx>';
         foreach ($tracks as $track)
         {
             $gpxData = $gpxData."<wpt lat=\"{$track->latitude}\" lon=\"{$track->longitude}\"></wpt>";
         }
-        $path = public_path()."/gpxFiles/route{$route->id}.gpx";
-        $gpxData = $gpxData."</gpx>";
+        $path = public_path() . "/route{$route->id}.gpx";
+        $gpxData = $gpxData . '</gpx>';
         File::put($path, $gpxData);
 
         return $path;

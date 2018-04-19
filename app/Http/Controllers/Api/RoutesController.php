@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\RouteRequest;
 use App\Repositories\RouteRepository;
 use App\Route;
+use App\Ship;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
@@ -42,7 +43,9 @@ class RoutesController extends Controller
      */
     public function store(RouteRequest $request)
     {
-        $route = $this->routeRepository->add(request(['total_time', 'ship_id', 'total_distance', 'average_speed']));
+        $data = $request->only(['total_time', 'ship_id', 'total_distance', 'average_speed']);
+        $ship = Ship::findOrFail(array_get($data, 'ship_id'));
+        $route = $this->routeRepository->add($data, $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.route.statuses.created'),

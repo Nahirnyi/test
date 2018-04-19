@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Route extends Model
 {
     /**
+     * @var array
+     */
+    protected $fillable = [
+        'total_time',
+        'total_distance',
+        'average_speed'
+    ];
+
+    /**
      * @return BelongsTo
      */
    public function ship() : BelongsTo

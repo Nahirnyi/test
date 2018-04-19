@@ -8,21 +8,22 @@
 
 namespace App\Repositories;
 
+use App\Company;
 use App\Ship;
+use Illuminate\Support\Collection;
 
 
 class ShipRepository
 {
     /**
-     * @param $company
-     * @param $data
+     * @param Company $company
+     * @param array $data
      * @return Ship
      */
-    public function add($company, $data): Ship
+    public function add(Company $company, array $data) : Ship
     {
-        $ship = new Ship();
-        $ship->name = $data['name'];
-        $ship->company_id = $company->id;
+        $ship = new Ship($data);
+        $ship->company()->associate($company);
         $ship->save();
 
         return $ship;
@@ -30,9 +31,9 @@ class ShipRepository
 
     /**
      * @param $company
-     * @return Ship
+     * @return Collection
      */
-    public function all($company): Ship
+    public function all($company) : Collection
     {
         $ships = $company->ships()->get();
 
@@ -40,15 +41,15 @@ class ShipRepository
     }
 
     /**
-     * @param $company
-     * @param $ship
-     * @param $data
+     * @param Company $company
+     * @param Ship $ship
+     * @param array $data
      * @return Ship
      */
-    public function update($company, $ship, $data): Ship
+    public function update(Company $company, Ship $ship, array $data) : Ship
     {
-        $ship->name = $data['name'];
-        $ship->company_id = $company->id;
+        $ship->fill($data);
+        $ship->company()->associate($company);
         $ship->save();
 
         return $ship;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\TrackRequest;
 use App\Jobs\ProcessTrack;
 use App\Repositories\TrackRepository;
+use App\Route;
 use App\Track;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -31,7 +32,11 @@ class TracksController extends Controller
      */
     public function store(TrackRequest $request)
     {
-        $track = $this->trackRepository->add(request(['latitude', 'longitude', 'speed', 'route_id']));
+        $data = $request->only(['latitude', 'longitude', 'speed', 'route_id']);
+
+        $route = Route::findOrFail(array_get($data, 'route_id'));
+
+        $track = $this->trackRepository->add($route, $data);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.track.statuses.created'),

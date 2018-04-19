@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Container extends Model
 {
     /**
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'price'
+    ];
+
+    /**
      * @return BelongsTo
      */
     public function ship() : BelongsTo

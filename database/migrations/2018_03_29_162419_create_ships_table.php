@@ -16,7 +16,7 @@ class CreateShipsTable extends Migration
         Schema::create('ships', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+//            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->string('name');
             $table->integer('status')->default(config('models.migrations.ship.standing'));
             $table->timestamps();

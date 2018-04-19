@@ -46,7 +46,8 @@ class ShipsController extends Controller
      */
     public function store(Company $company, ShipRequest $request)
     {
-        $ship = $this->shipRepository->add(request(['name']));
+        $data = $request->only(['name']);
+        $ship = $this->shipRepository->add($company, $data);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.ship.statuses.created'),
@@ -74,7 +75,8 @@ class ShipsController extends Controller
      */
     public function update(ShipRequest $request, Company $company, Ship $ship)
     {
-        $this->shipRepository->update($company, $ship, request(['name']));
+        $data = $request->only(['name']);
+        $this->shipRepository->update($company, $ship, $data);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.ship.statuses.updated'),

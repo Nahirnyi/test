@@ -15,7 +15,9 @@ class TrackTableSeeder extends Seeder
         foreach ($routes as $route)
         {
             $rand = random_int(10, 100);
-            factory(App\Track::class, $rand)->create(['route_id' => $route->id]);
+            factory(App\Track::class, $rand)->create([
+                'route_id' => $route->id,
+            ]);
         }
     }
 }

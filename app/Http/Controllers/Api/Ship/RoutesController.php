@@ -45,7 +45,8 @@ class RoutesController extends Controller
      */
     public function store(RouteRequest $request, Ship $ship)
     {
-        $route = $this->routeRepository->add(request(['total_time', 'total_distance', 'average_speed']), $ship);
+        $data = $request->only(['total_time', 'ship_id', 'total_distance', 'average_speed']);
+        $route = $this->routeRepository->add($data, $ship);
 
         return response()->json([
             config('models.messages.message') => config('models.controllers.route.statuses.created'),
