@@ -79,4 +79,13 @@ class RoutesController extends Controller
             config('models.messages.message') => config('models.controllers.route.statuses.deleted')
         ], Response::HTTP_OK);
     }
+
+    public function makeGpx(Ship $ship, Route $route)
+    {
+        $path = $this->routeRepository->makeGpx($route);
+
+        return response()->json([
+            compact('path')
+        ], Response::HTTP_OK);
+    }
 }

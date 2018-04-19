@@ -24,6 +24,7 @@ Route::resource('/companies', 'Api\Ship\CompaniesController', ['except' => ['cre
 Route::resource('/companies/{company}/ships', 'Api\ShipsController', ['except' => ['create', 'edit']]);
 Route::resource('/ships/{ship}/containers', 'Api\Ship\ContainersController', ['except' => ['create', 'edit']]);
 Route::resource('/ships/{ship}/routes', 'Api\Ship\RoutesController', ['except' => ['create', 'edit', 'update']]);
+Route::get('/ships/{ship}/routes/{route}/gpx', 'Api\Ship\RoutesController@makeGpx');
 Route::resource('/routes/{route}/tracks', 'Api\Ship\TracksController', ['only' => 'index']);
 
 Route::resource('/containers', 'Api\ContainersController', ['except' => ['create', 'edit']]);

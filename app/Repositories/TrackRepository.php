@@ -19,6 +19,7 @@ class TrackRepository
     public function add($data) : Track
     {
         $track = new Track();
+        Redis::set($data['route_id'], $data);
         $track->latitude = $data['latitude'];
         $track->longitude = $data['longitude'];
         $track->speed = $data['speed'];

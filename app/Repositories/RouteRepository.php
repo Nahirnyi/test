@@ -9,6 +9,8 @@
 namespace App\Repositories;
 
 use App\Route;
+use App\Ship;
+use Illuminate\Support\Facades\File;
 
 class RouteRepository
 {
@@ -59,5 +61,24 @@ class RouteRepository
     public function delete($route)
     {
         $route->delete();
+    }
+
+    /**
+     * @param $route
+     * @return string
+     */
+    public function makeGpx($route)
+    {
+        $tracks = $route->tracks()->get();
+        $gpxData = "<gpx>";
+        foreach ($tracks as $track)
+        {
+            $gpxData = $gpxData."<wpt lat=\"{$track->latitude}\" lon=\"{$track->longitude}\"></wpt>";
+        }
+        $path = public_path()."/route{$route->id}.gpx";
+        $gpxData = $gpxData."</gpx>";
+        File::put($path, $gpxData);
+
+        return $path;
     }
 }
