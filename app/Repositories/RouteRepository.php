@@ -75,7 +75,7 @@ class RouteRepository
         {
             $gpxData = $gpxData."<wpt lat=\"{$track->latitude}\" lon=\"{$track->longitude}\"></wpt>";
         }
-        $path = public_path()."/route{$route->id}.gpx";
+        $path = public_path()."/gpxFiles/route{$route->id}.gpx";
         $gpxData = $gpxData."</gpx>";
         File::put($path, $gpxData);
 
