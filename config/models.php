@@ -18,6 +18,13 @@ return [
         'error' => 'error'
     ],
     'controllers' => [
+        'gpx' => [
+            'statuses' => [
+                'created' => 'Successfully created gpx!',
+                'deleted' => 'Successfully deleted gpx!',
+                'parse' => 'Successfully parse gpx!'
+            ]
+        ],
         'container' => [
             'statuses' => [
                 'created' => 'Successfully created container!',

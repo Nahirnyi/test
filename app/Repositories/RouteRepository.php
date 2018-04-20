@@ -57,9 +57,9 @@ class RouteRepository
 
     /**
      * @param Route $route
-     * @return String_
+     * @return string
      */
-    public function makeGpx(Route $route) : String_
+    public function makeGpx(Route $route)
     {
         $tracks = $route->tracks()->get();
         $gpxData = '<gpx>';
@@ -67,10 +67,10 @@ class RouteRepository
         {
             $gpxData = $gpxData."<wpt lat=\"{$track->latitude}\" lon=\"{$track->longitude}\"></wpt>";
         }
-        $path = public_path() . "/route{$route->id}.gpx";
+        $path = public_path() . "\maded\\route{$route->id}.gpx";
         $gpxData = $gpxData . '</gpx>';
         File::put($path, $gpxData);
-
         return $path;
+
     }
 }

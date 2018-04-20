@@ -84,10 +84,10 @@ class CompaniesController extends Controller
     /**
      * @param Company $company
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
      */
     public function destroy(Company $company)
     {
+        Company::findOrFail($company->id);
         $this->companyRepository->delete($company);
 
         return response()->json([

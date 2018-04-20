@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/register', 'Auth\RegisterController@store');
 Route::post('/login', 'Auth\LoginController@store');
 
-Route::resource('/companies', 'Api\Ship\CompaniesController', ['except' => ['create', 'edit']]);
+Route::resource('/companies', 'Api\CompaniesController', ['except' => ['create', 'edit']]);
 Route::resource('/companies/{company}/ships', 'Api\ShipsController', ['except' => ['create', 'edit']]);
 Route::resource('/ships/{ship}/containers', 'Api\Ship\ContainersController', ['except' => ['create', 'edit']]);
 Route::resource('/ships/{ship}/routes', 'Api\Ship\RoutesController', ['except' => ['create', 'edit', 'update']]);
@@ -29,6 +29,8 @@ Route::resource('/routes/{route}/tracks', 'Api\Ship\TracksController', ['only' =
 
 Route::resource('/containers', 'Api\ContainersController', ['except' => ['create', 'edit']]);
 Route::resource('/routes', 'Api\RoutesController', ['except' => ['create', 'edit', 'update']]);
+Route::resource('/gpx', 'Api\GpxController', ['except' => ['create', 'show', 'edit', 'update']]);
+Route::get('/routes/{route}/gpx/success/{gpx}', 'Api\GpxController@success');
 Route::resource('/tracks', 'Api\TracksController', ['only' => 'store']);
 
 Route::get('/statistics/{key}', 'Api\Statistic\StatisticsController@show');
