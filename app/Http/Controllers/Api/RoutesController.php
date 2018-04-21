@@ -77,4 +77,25 @@ class RoutesController extends Controller
             config('models.messages.message') => config('models.controllers.route.statuses.deleted')
         ], Response::HTTP_OK);
     }
+
+    /**
+     * @param Route $route
+     * @return Response
+     */
+    public function end(Route $route) : Response
+    {
+        $first = $route->tracks()->orderBy('created_at')->firstOrFail();
+        $last = $route->tracks()->orderBy('created_at', 'desc')->firstOrFail();
+
+        $distance = $this->routeRepository->calculateDistance($first, $last);
+        $time = $this->routeRepository->calculateTime($first, $last);
+        $speed = $this->routeRepository->calculateSpeed($distance, $time);
+
+        $this->routeRepository->update($route, $distance, $time, $speed);
+
+        return response()->json([
+            config('models.messages.message') => config('models.controllers.route.statuses.end'),
+            compact('route')
+        ], Response::HTTP_OK);
+    }
 }

@@ -24,7 +24,7 @@ class TrackRepository
     {
         $track = new Track($data);
 
-        Redis::set($data['route_id'], $data);
+        Redis::set($data['route_id'], json_encode($data));
 
         $track->route()->associate($route);
         $track->save();

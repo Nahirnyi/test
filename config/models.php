@@ -35,7 +35,8 @@ return [
         'route' => [
             'statuses' => [
                 'created' => 'Successfully created route!',
-                'deleted' => 'Successfully deleted route!'
+                'deleted' => 'Successfully deleted route!',
+                'end' => 'Successfully updated route!'
             ]
         ],
         'track' => [

@@ -31,6 +31,7 @@ Route::resource('/containers', 'Api\ContainersController', ['except' => ['create
 Route::resource('/routes', 'Api\RoutesController', ['except' => ['create', 'edit', 'update']]);
 Route::resource('/gpx', 'Api\GpxController', ['except' => ['create', 'show', 'edit', 'update']]);
 Route::get('/routes/{route}/gpx/success/{gpx}', 'Api\GpxController@success');
+Route::get('/routes/{route}/end', 'Api\RoutesController@end');
 Route::resource('/tracks', 'Api\TracksController', ['only' => 'store']);
 
 Route::get('/statistics/{key}', 'Api\Statistic\StatisticsController@show');

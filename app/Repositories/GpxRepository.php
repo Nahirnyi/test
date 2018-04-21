@@ -14,7 +14,6 @@ use App\Route;
 use App\Track;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use phpDocumentor\Reflection\Types\Integer;
 
 class GpxRepository
 {
@@ -112,7 +111,7 @@ class GpxRepository
                 $track->latitude = $latitude;
                 $track->longitude = $longitude;
                 $track->speed = rand(5, 50);
-                $track->route_id = $route->id;
+                $track->route()->associate($route);
                 $track->save();
                 $countTracks++;
             }
