@@ -12,24 +12,47 @@ use App\Route;
 use App\Track;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redis;
+use function MongoDB\BSON\toJSON;
 
 class TrackRepository
 {
     /**
-     * @param Route $route
      * @param array $data
-     * @return Track
+     * @return mixed
      */
-    public function add(Route $route, array $data) : Track
+    public function add(array $data)
     {
-        $track = new Track($data);
+        if (Redis::get($data['route_id']))
+        {
+            $oldData = json_decode(Redis::get($data['route_id']));
+            array_push($oldData, $data);
+            Redis::set($data['route_id'], json_encode($oldData));
+        } else {
+            $arr['0'] = $data;
+            Redis::set($data['route_id'], json_encode($arr));
+        }
+        $result = json_decode(Redis::get($data['route_id']));
+        return $result;
+    }
 
-        Redis::set($data['route_id'], json_encode($data));
+    /**
+     * @param Route $route
+     * @return Route
+     */
+    public function saveToDB(Route $route) : Route
+    {
+        $tracks = json_decode(Redis::get($route->id));
+        foreach ($tracks as $tr)
+        {
+            $track = new Track();
+            $track->latitude = $tr->latitude;
+            $track->longitude = $tr->longitude;
+            $track->speed = $tr->speed;
+            $track->route_id = $tr->route_id;
+            $track->save();
+        }
 
-        $track->route()->associate($route);
-        $track->save();
-
-        return $track;
+        return $route;
     }
 
     /**

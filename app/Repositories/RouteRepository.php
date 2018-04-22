@@ -88,6 +88,7 @@ class RouteRepository
 
         $distanceEarth = 2 * 3.14 * 6372795;
         $distance = sqrt(($lat1 - $lat2) * ($lat1 - $lat2) + ($lon1 - $lon2) * ($lon1 - $lon2)) * $distanceEarth / 360;
+
         return $distance;
     }
 

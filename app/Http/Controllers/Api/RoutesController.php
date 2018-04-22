@@ -80,9 +80,9 @@ class RoutesController extends Controller
 
     /**
      * @param Route $route
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function end(Route $route) : Response
+    public function end(Route $route)
     {
         $first = $route->tracks()->orderBy('created_at')->firstOrFail();
         $last = $route->tracks()->orderBy('created_at', 'desc')->firstOrFail();

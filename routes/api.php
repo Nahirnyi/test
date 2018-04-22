@@ -33,5 +33,6 @@ Route::resource('/gpx', 'Api\GpxController', ['except' => ['create', 'show', 'ed
 Route::get('/routes/{route}/gpx/success/{gpx}', 'Api\GpxController@success');
 Route::get('/routes/{route}/end', 'Api\RoutesController@end');
 Route::resource('/tracks', 'Api\TracksController', ['only' => 'store']);
+Route::get('/routes/{route}/tracks/save', 'Api\TracksController@save');
 
 Route::get('/statistics/{key}', 'Api\Statistic\StatisticsController@show');
