@@ -44,7 +44,8 @@ class TracksController extends Controller
 
     /**
      * @param Route $route
-     * @return Route
+     * @return mixed
+     *
      */
     public function save(Route $route)
     {

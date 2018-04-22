@@ -8,11 +8,11 @@
 
 namespace App\Repositories;
 
+use App\Jobs\TrackQueue;
 use App\Route;
 use App\Track;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redis;
-use function MongoDB\BSON\toJSON;
 
 class TrackRepository
 {
@@ -44,12 +44,7 @@ class TrackRepository
         $tracks = json_decode(Redis::get($route->id));
         foreach ($tracks as $tr)
         {
-            $track = new Track();
-            $track->latitude = $tr->latitude;
-            $track->longitude = $tr->longitude;
-            $track->speed = $tr->speed;
-            $track->route_id = $tr->route_id;
-            $track->save();
+            TrackQueue::dispatch($tr);
         }
 
         return $route;
