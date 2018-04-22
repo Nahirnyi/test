@@ -2,6 +2,10 @@
 
 return [
     'migrations' => [
+        'gpx' => [
+            'stated' => 'stated',
+            'done' => 'done'
+        ],
         'container' => [
             'loading' => 1,
             'departure' => 2,

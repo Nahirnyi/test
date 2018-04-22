@@ -87,7 +87,9 @@ class RoutesController extends Controller
         $first = $route->tracks()->orderBy('created_at')->firstOrFail();
         $last = $route->tracks()->orderBy('created_at', 'desc')->firstOrFail();
 
-        $distance = $this->routeRepository->calculateDistance($first, $last);
+        $tracks = $route->tracks()->orderBy('created_at')->get();
+
+        $distance = $this->routeRepository->calculateDistance($tracks);
         $time = $this->routeRepository->calculateTime($first, $last);
         $speed = $this->routeRepository->calculateSpeed($distance, $time);
 

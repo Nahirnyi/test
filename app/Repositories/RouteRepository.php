@@ -75,14 +75,32 @@ class RouteRepository
     }
 
     /**
-     * @param $first
-     * @param $last
+     * @param $tracks
      * @return float|int
      */
-    public function calculateDistance ($first, $last)
+    public function calculateDistance ($tracks)
     {
         $distanceEarth = GpxRepository::DISTANCE_EARTH;
-        $distance = $this->getSqrtByCoordinates($first, $last) * $distanceEarth / 360;
+        $distance = 0;
+        $count = 0;
+        foreach ($tracks as $track)
+        {
+            if ($count == 0)
+            {
+                $first = $track;
+                $count++;
+                continue;
+            }
+
+            if ($count == 1)
+            {
+                $last = $track;
+                $distance += $this->getSqrtByCoordinates($first, $last) * $distanceEarth / 360;
+                $first = $track;
+            }
+
+
+        }
 
         return $distance;
     }
@@ -90,7 +108,6 @@ class RouteRepository
     /**
      * @param $first
      * @param $last
-     *
      * @return float
      */
     private function getSqrtByCoordinates($first, $last) : float
