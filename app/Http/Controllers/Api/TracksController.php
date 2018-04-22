@@ -44,13 +44,15 @@ class TracksController extends Controller
 
     /**
      * @param Route $route
-     * @return mixed
-     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function save(Route $route)
     {
-        $data = $this->trackRepository->saveToDB($route);
+        $this->trackRepository->saveToDB($route);
 
-        return $data;
+        return response()->json([
+            config('models.messages.message') => config('models.controllers.track.statuses.saveToDB'),
+            compact('route')
+        ], Response::HTTP_CREATED);
     }
 }

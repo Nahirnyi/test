@@ -17,6 +17,16 @@ use Illuminate\Support\Facades\Redis;
 class TrackRepository
 {
     /**
+     * @param Route $route
+     */
+    public function store(Route $route, array $data)
+    {
+        $track = new Track($data);
+        $track->route()->associate($route);
+        $track->save();
+    }
+
+    /**
      * @param array $data
      * @return mixed
      */
@@ -42,9 +52,9 @@ class TrackRepository
     public function saveToDB(Route $route) : Route
     {
         $tracks = json_decode(Redis::get($route->id));
-        foreach ($tracks as $tr)
+        foreach ($tracks as $track)
         {
-            TrackQueue::dispatch($tr);
+            TrackQueue::dispatch($track);
         }
 
         return $route;

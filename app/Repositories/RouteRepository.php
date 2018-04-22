@@ -65,7 +65,7 @@ class RouteRepository
         $gpxData = '<gpx>';
         foreach ($tracks as $track)
         {
-            $gpxData = $gpxData."<wpt lat=\"{$track->latitude}\" lon=\"{$track->longitude}\"></wpt>";
+            $gpxData = $gpxData . "<wpt lat=\"{$track->latitude}\" lon=\"{$track->longitude}\"></wpt>";
         }
         $path = public_path() . "\maded\\route{$route->id}.gpx";
         $gpxData = $gpxData . '</gpx>';
@@ -81,15 +81,36 @@ class RouteRepository
      */
     public function calculateDistance ($first, $last)
     {
-        $lat1 = $first->latitude;
-        $lon1 = $first->longitude;
-        $lat2 = $last->latitude;
-        $lon2 = $last->longitude;
-
-        $distanceEarth = 2 * 3.14 * 6372795;
-        $distance = sqrt(($lat1 - $lat2) * ($lat1 - $lat2) + ($lon1 - $lon2) * ($lon1 - $lon2)) * $distanceEarth / 360;
+        $distanceEarth = GpxRepository::DISTANCE_EARTH;
+        $distance = $this->getSqrtByCoordinates($first, $last) * $distanceEarth / 360;
 
         return $distance;
+    }
+
+    /**
+     * @param $first
+     * @param $last
+     *
+     * @return float
+     */
+    private function getSqrtByCoordinates($first, $last) : float
+    {
+        return sqrt(
+            $this->getPowByCoordinates($first->latitude, $last->latitude) +
+            $this->getPowByCoordinates($first->longitude, $last->longitude)
+        );
+    }
+
+    /**
+     * @param $first
+     * @param $last
+     * @param int $exp
+     *
+     * @return float|int
+     */
+    private function getPowByCoordinates($first, $last, $exp = 2)
+    {
+        return  pow($first - $last, $exp);
     }
 
     /**

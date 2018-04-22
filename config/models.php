@@ -41,7 +41,8 @@ return [
         ],
         'track' => [
             'statuses' => [
-                'created' => 'Successfully created track!'
+                'created' => 'Successfully created track!',
+                'saveToDB' => 'Successfully saved!'
             ]
         ],
         'ship' => [
